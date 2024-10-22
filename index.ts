@@ -171,18 +171,18 @@ export class MapState<T> extends State<Map<string, T>> {
 // UTILITY
 export function createProxyState<T>(
     statesToSubscibe: State<any>[],
-    fn: () => T
+    fn: () => T,
 ): State<T> {
     const proxyState = new State<T>(fn());
     statesToSubscibe.forEach((state) =>
-        state.subscribe(() => (proxyState.value = fn()))
+        state.subscribe(() => (proxyState.value = fn())),
     );
     return proxyState;
 }
 
 export function bulkSubscribe(
     statesToSubscibe: State<any>[],
-    fn: () => void
+    fn: () => void,
 ): void {
     statesToSubscibe.forEach((state) => state.subscribeSilent(fn));
 }
@@ -196,7 +196,7 @@ function persistState(localStorageKey: string, state: State<any>) {
 
 export function restoreState<T>(
     localStorageKey: string,
-    initialStateValue: T
+    initialStateValue: T,
 ): State<T> {
     const storedString =
         localStorage.getItem(localStorageKey) ??
@@ -211,7 +211,7 @@ export function restoreState<T>(
 
 export function restoreListState<T>(
     localStorageKey: string,
-    initialItems: any[] = []
+    initialItems: any[] = [],
 ): ListState<T> {
     const storedString = localStorage.getItem(localStorageKey) ?? "";
 
@@ -229,7 +229,7 @@ export function restoreListState<T>(
 
 export function restoreMapState<T>(
     localStorageKey: string,
-    initialItems: [string, any][] = []
+    initialItems: [string, any][] = [],
 ): MapState<T> {
     const storedString = localStorage.getItem(localStorageKey) ?? "";
 
@@ -282,7 +282,7 @@ export function createElement(
                 case "subscribe": {
                     const state = value as State<any>;
                     state.subscribe(
-                        (newValue) => (element[directiveValue] = newValue)
+                        (newValue) => (element[directiveValue] = newValue),
                     );
 
                     break;
@@ -290,11 +290,11 @@ export function createElement(
                 case "bind": {
                     const state = value as State<any>;
                     state.subscribe(
-                        (newValue) => (element[directiveValue] = newValue)
+                        (newValue) => (element[directiveValue] = newValue),
                     );
                     element.addEventListener(
                         "input",
-                        () => (state.value = (element as any)[directiveValue])
+                        () => (state.value = (element as any)[directiveValue]),
                     );
                     break;
                 }
@@ -302,7 +302,7 @@ export function createElement(
                     if (value.subscribe) {
                         const state = value as State<any>;
                         state.subscribe((newValue) =>
-                            element.toggleAttribute(directiveValue, newValue)
+                            element.toggleAttribute(directiveValue, newValue),
                         );
                     } else {
                         element.toggleAttribute(directiveValue, value);
@@ -312,7 +312,7 @@ export function createElement(
                 case "set": {
                     const state = value as State<any>;
                     state.subscribe((newValue) =>
-                        element.setAttribute(directiveValue, newValue)
+                        element.setAttribute(directiveValue, newValue),
                     );
                     break;
                 }
@@ -331,13 +331,13 @@ export function createElement(
                             try {
                                 const [listState, toElement] = value as [
                                     listState: ListState<any>,
-                                    StateItemConverter<any>
+                                    StateItemConverter<any>,
                                 ];
 
                                 listState.handleAddition((newItem) => {
                                     const child = toElement(newItem);
                                     listState.handleRemoval(newItem, () =>
-                                        child.remove()
+                                        child.remove(),
                                     );
 
                                     if (directiveValue == "append") {
